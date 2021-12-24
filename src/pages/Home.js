@@ -5,9 +5,9 @@ const Home = () => {
   const [data, setData] = useState([]);
   const [user, setUser] = useState("");
   const [contact, setContact] = useState("");
+  const [id, setId] = useState("");
   const [editUser, setEditUser] = useState("");
   const [editContact, setEditContact] = useState("");
-  const [update, setUpdate] = useState([]);
   const [recherche, setRecherche] = useState("");
 
   useEffect(() => {
@@ -24,6 +24,8 @@ const Home = () => {
     axios.get("http://localhost:8082/update/" + id).then((res) => {
       setEditUser(res.data.user);
       setEditContact(res.data.contact);
+      setId(res.data._id);
+      console.log(res.data);
     });
   };
 
@@ -39,19 +41,14 @@ const Home = () => {
 
   const updated = (id) => {
     const data = {
-      editUser,
-      editContact,
+      user: editUser,
+      contact: editContact,
     };
 
-    axios
-      .put("http://localhost:8082/" + id, {
-        user: editUser,
-        contact: editContact,
-      })
-      .then((res) => {
-        console.log(res.data);
-        select();
-      });
+    axios.put("http://localhost:8082/" + id, data).then((res) => {
+      console.log(res.data);
+      select();
+    });
   };
 
   const supp = (id) => {
@@ -252,7 +249,7 @@ const Home = () => {
                             autoFocus
                             type="text"
                             name="user"
-                            defaultValue={editUser}
+                            value={editUser}
                             className="form-control"
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"
@@ -269,7 +266,7 @@ const Home = () => {
                           <input
                             autoFocus
                             name="contact"
-                            defaultValue={editContact}
+                            value={editContact}
                             type="tel"
                             className="form-control"
                             id="exampleInputPassword1"
@@ -287,7 +284,7 @@ const Home = () => {
                           type="submit"
                           className="btn btn-primary"
                           onClick={() => {
-                            updated(user._id);
+                            updated(id);
                           }}
                         >
                           Ajouter
